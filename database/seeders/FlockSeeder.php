@@ -35,5 +35,18 @@ class FlockSeeder extends Seeder
             'start_date' => now()->subDays(90),
             'status' => 'active',
         ]);
+
+        $growerFarm = Farm::where('name', 'Farm Grower Barat')->first();
+        if ($growerFarm) {
+            Flock::create([
+                'farm_id' => $growerFarm->id,
+                'name' => 'Flock Grower G1',
+                'house_code' => 'GB-01',
+                'age_in_day' => 45,
+                'strain' => 'Lohmann Brown',
+                'start_date' => now()->subDays(45),
+                'status' => 'active',
+            ]);
+        }
     }
 }

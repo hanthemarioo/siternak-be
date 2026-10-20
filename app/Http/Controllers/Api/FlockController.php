@@ -45,6 +45,17 @@ class FlockController extends Controller
         return response()->json(['message' => 'Flock created', 'data' => $flock], 201);
     }
 
+    public function show(Flock $flock): JsonResponse
+    {
+        $flockData = Flock::forUser(Auth::user())
+            ->with(['farm', 'coops'])
+            ->findOrFail($flock->id);
+
+        return response()->json([
+            'data' => $flockData,
+        ]);
+    }
+
     public function update(StoreFlockRequest $request, Flock $flock): JsonResponse
     {
         $data = $request->validated();

@@ -40,9 +40,14 @@ class FarmSeeder extends Seeder
             'farm_id' => $farm2->id,
         ]);
 
-        User::where('role', 'user_input')
-            ->update([
-                'farm_id' => $farm1->id,
-            ]);
+        $userInputs = User::where('role', 'user_input')->orderBy('id')->get();
+        if ($userInputs->count() >= 2) {
+            $userInputs[0]->update(['farm_id' => $farm1->id]);
+            $userInputs[1]->update(['farm_id' => $farm1->id]);
+        }
+        if ($userInputs->count() >= 4) {
+            $userInputs[2]->update(['farm_id' => $farm2->id]);
+            $userInputs[3]->update(['farm_id' => $farm2->id]);
+        }
     }
 }

@@ -34,5 +34,14 @@ class CoopSeeder extends Seeder
             'name' => 'Kandang B1',
             'initial_population' => 4500,
         ]);
+
+        $flockGrower = Flock::where('name', 'Flock Grower G1')->first();
+        if ($flockGrower) {
+            Coop::create([
+                'flock_id' => $flockGrower->id,
+                'name' => 'Kandang Grower 1',
+                'initial_population' => 4000,
+            ]);
+        }
     }
 }

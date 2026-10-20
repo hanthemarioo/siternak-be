@@ -14,7 +14,9 @@ class DailyEggProductionSeeder extends Seeder
      */
     public function run(): void
     {
-        $records = DailyFlockRecord::with('coop')->get();
+        $records = DailyFlockRecord::whereHas('coop.flock.farm', function ($q) {
+            $q->where('type', 'layer');
+        })->with('coop')->get();
 
         foreach ($records as $record) {
 
