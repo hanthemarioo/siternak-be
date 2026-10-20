@@ -53,6 +53,7 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         $token = $user->createToken('api_token', ['*'])->plainTextToken;
+        $user->load('farm');
 
         return response()->json([
             'message' => 'Login successful.',
@@ -67,7 +68,7 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
-        return response()->json($request->user()->load('ownedFarms'));
+        return response()->json($request->user()->load(['ownedFarms', 'farm']));
     }
 
     /**
