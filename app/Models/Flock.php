@@ -30,12 +30,10 @@ class Flock extends Model
 
     public function scopeForUser($query, $user)
     {
-        $ownerId = $user->role === 'super_admin'
-            ? $user->id
-            : $user->created_by;
+        if ($user->role === 'super_admin') {
+            return $query->whereHas('farm', fn ($q) => $q->where('owner_id', $user->id));
+        }
 
-        return $query->whereHas('farm', function ($q) use ($ownerId) {
-            $q->where('owner_id', $ownerId);
-        });
+        return $query->where('farm_id', $user->farm_id);
     }
 }
