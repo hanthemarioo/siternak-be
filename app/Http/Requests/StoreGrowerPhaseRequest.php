@@ -76,6 +76,13 @@ class StoreGrowerPhaseRequest extends FormRequest
 
             'mortality_count' => ['required', 'integer', 'min:0'],
             'culling_count' => ['required', 'integer', 'min:0'],
+
+            'temperature_c' => ['required', 'numeric', 'between:10,50'],
+            'uniformity_percent' => ['nullable', 'numeric', 'between:0,100'],
+            'feed_name' => ['nullable', 'string', 'max:255'],
+            'medicine_vitamin' => ['nullable', 'string', 'max:255'],
+            'vaccine' => ['nullable', 'string', 'max:255'],
+            'notes' => ['nullable', 'string'],
         ];
     }
 

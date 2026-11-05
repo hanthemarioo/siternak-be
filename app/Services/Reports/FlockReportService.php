@@ -22,6 +22,8 @@ class FlockReportService
                 $feedKg = (float) $dateRecords->sum('feed_kg');
                 $waterL = (float) $dateRecords->sum('water_l');
                 $avgBodyWeightKg = $this->weightedBodyWeightKg($dateRecords, $date, $populationByCoopDate);
+                $avgTemperature = $this->nullableAverage($dateRecords, 'temperature_c', 1);
+                $avgUniformity = $this->nullableAverage($dateRecords, 'uniformity_percent', 2);
 
                 return [
                     'date' => $date,
@@ -37,11 +39,13 @@ class FlockReportService
                     'water_ml_per_bird' => $this->ratio($waterL * 1000, $population),
                     'actual_body_weight_g' => round($avgBodyWeightKg * 1000, 2),
                     'standard_body_weight_g' => null,
-                    'actual_uniformity_percent' => null,
+                    'temperature_c' => $avgTemperature,
+                    'actual_uniformity_percent' => $avgUniformity,
                     'standard_uniformity_percent' => null,
-                    'feed_name' => null,
-                    'medicine_vitamin' => null,
-                    'notes' => null,
+                    'feed_name' => $this->mergedText($dateRecords, 'feed_name'),
+                    'medicine_vitamin' => $this->mergedText($dateRecords, 'medicine_vitamin'),
+                    'vaccine' => $this->mergedText($dateRecords, 'vaccine'),
+                    'notes' => $this->mergedText($dateRecords, 'notes'),
                 ];
             })
             ->sortBy('date')
@@ -95,10 +99,10 @@ class FlockReportService
                     'egg_weight_per_1000_birds' => $this->ratio($totalEggWeightKg * 1000, $population),
                     'hen_day_production' => $this->percentage($totalEggs, $population),
                     'fcr' => $this->ratio($feedKg, $totalEggWeightKg),
-                    'feed_name' => null,
-                    'medicine_vitamin' => null,
-                    'vaccine' => null,
-                    'notes' => null,
+                    'feed_name' => $this->mergedText($dateRecords, 'feed_name'),
+                    'medicine_vitamin' => $this->mergedText($dateRecords, 'medicine_vitamin'),
+                    'vaccine' => $this->mergedText($dateRecords, 'vaccine'),
+                    'notes' => $this->mergedText($dateRecords, 'notes'),
                 ];
             })
             ->sortBy('date')
@@ -112,18 +116,9 @@ class FlockReportService
             'grower' => [
                 'feed_standard_gram_per_bird' => 'Tidak ada kolom standar konsumsi pakan pada migration/database.',
                 'standard_body_weight_g' => 'Tidak ada kolom standar body weight pada migration/database.',
-                'actual_uniformity_percent' => 'Tidak ada kolom uniformity aktual pada migration/database.',
                 'standard_uniformity_percent' => 'Tidak ada kolom standar uniformity pada migration/database.',
-                'feed_name' => 'Tidak ada tabel/kolom feed name pada migration/database.',
-                'medicine_vitamin' => 'Tidak ada tabel/kolom medicine/vitamin pada migration/database.',
-                'notes' => 'Tidak ada kolom notes pada migration/database.',
             ],
-            default => [
-                'feed_name' => 'Tidak ada tabel/kolom feed name pada migration/database.',
-                'medicine_vitamin' => 'Tidak ada tabel/kolom medicine/vitamin pada migration/database.',
-                'vaccine' => 'Tidak ada tabel/kolom vaccine pada migration/database.',
-                'notes' => 'Tidak ada kolom notes pada migration/database.',
-            ],
+            default => [],
         };
     }
 
@@ -139,6 +134,12 @@ class FlockReportService
                 'avg_body_weight_kg',
                 'mortality_count',
                 'culling_count',
+                'temperature_c',
+                'uniformity_percent',
+                'feed_name',
+                'medicine_vitamin',
+                'vaccine',
+                'notes',
             ])
             ->with([
                 'coop:id,flock_id,initial_population',
@@ -282,5 +283,34 @@ class FlockReportService
         }
 
         return round($value / $total, 2);
+    }
+
+    private function nullableAverage(Collection $records, string $field, int $precision = 2): ?float
+    {
+        $values = $records
+            ->pluck($field)
+            ->filter(fn ($val) => $val !== null && $val !== '');
+
+        if ($values->isEmpty()) {
+            return null;
+        }
+
+        return round((float) $values->avg(), $precision);
+    }
+
+    private function mergedText(Collection $records, string $field): ?string
+    {
+        $values = $records
+            ->pluck($field)
+            ->map(fn ($val) => is_string($val) ? trim($val) : '')
+            ->filter(fn (string $val) => $val !== '')
+            ->unique()
+            ->values();
+
+        if ($values->isEmpty()) {
+            return null;
+        }
+
+        return $values->implode(', ');
     }
 }

@@ -95,10 +95,12 @@ class ReportController extends Controller
             'water_ml_per_bird' => 'water_ml_per_bird',
             'actual_body_weight_g' => 'actual_body_weight_g',
             'standard_body_weight_g' => 'standard_body_weight_g',
+            'temperature_c' => 'temperature_c',
             'actual_uniformity_percent' => 'actual_uniformity_percent',
             'standard_uniformity_percent' => 'standard_uniformity_percent',
             'feed_name' => 'feed_name',
             'medicine_vitamin' => 'medicine_vitamin',
+            'vaccine' => 'vaccine',
             'notes' => 'notes',
         ];
     }

@@ -26,10 +26,12 @@ class GrowerReportResource extends JsonResource
             'water_ml_per_bird' => $this['water_ml_per_bird'],
             'actual_body_weight_g' => $this['actual_body_weight_g'],
             'standard_body_weight_g' => $this['standard_body_weight_g'],
+            'temperature_c' => $this['temperature_c'],
             'actual_uniformity_percent' => $this['actual_uniformity_percent'],
             'standard_uniformity_percent' => $this['standard_uniformity_percent'],
             'feed_name' => $this['feed_name'],
             'medicine_vitamin' => $this['medicine_vitamin'],
+            'vaccine' => $this['vaccine'],
             'notes' => $this['notes'],
         ];
     }

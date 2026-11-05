@@ -53,13 +53,15 @@ class LayerPhaseController extends Controller
             'broken_eggs_count',
             'broken_eggs_weight_kg',
         ]);
-        $eggProductionData = Arr::except($data, [
-            'coop_id',
-            'feed_kg',
-            'water_l',
-            'avg_body_weight_kg',
-            'mortality_count',
-            'culling_count',
+        $eggProductionData = Arr::only($data, [
+            'marketable_eggs_count',
+            'marketable_eggs_weight_kg',
+            'sorted_eggs_count',
+            'sorted_eggs_weight_kg',
+            'spoiled_eggs_count',
+            'spoiled_eggs_weight_kg',
+            'broken_eggs_count',
+            'broken_eggs_weight_kg',
         ]);
 
         // VALIDASI: pastikan user boleh akses coop tsb
@@ -132,13 +134,15 @@ class LayerPhaseController extends Controller
             'broken_eggs_count',
             'broken_eggs_weight_kg',
         ]);
-        $eggProductionData = Arr::except($data, [
-            'coop_id',
-            'feed_kg',
-            'water_l',
-            'avg_body_weight_kg',
-            'mortality_count',
-            'culling_count',
+        $eggProductionData = Arr::only($data, [
+            'marketable_eggs_count',
+            'marketable_eggs_weight_kg',
+            'sorted_eggs_count',
+            'sorted_eggs_weight_kg',
+            'spoiled_eggs_count',
+            'spoiled_eggs_weight_kg',
+            'broken_eggs_count',
+            'broken_eggs_weight_kg',
         ]);
 
         $this->authorizeCoop($data['coop_id'], $user);

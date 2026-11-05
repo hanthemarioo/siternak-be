@@ -89,6 +89,11 @@ class StoreLayerPhaseRequest extends FormRequest
 
             'broken_eggs_count' => ['required', 'integer', 'min:0'],
             'broken_eggs_weight_kg' => ['required', 'numeric', 'min:0'],
+
+            'feed_name' => ['nullable', 'string', 'max:255'],
+            'medicine_vitamin' => ['nullable', 'string', 'max:255'],
+            'vaccine' => ['nullable', 'string', 'max:255'],
+            'notes' => ['nullable', 'string'],
         ];
     }
 
